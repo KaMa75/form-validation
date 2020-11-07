@@ -8,15 +8,29 @@ class Form extends Component {
         super(props);
         this.initialValue = {
             value: '',
-            isValid: null
+            isValid: true
+        };
+        this.initialCheckboxValue = {
+            isChecked: false,
+            isValid: true
         };
         this.state = {
             name: {...this.initialValue},
             email: {...this.initialValue},
             bio: {...this.initialValue},
             sex: {...this.initialValue},
-            agree: {...this.initialValue}
+            agree: {...this.initialCheckboxValue}
         }
+    }
+
+    resetForm() {
+        this.setState({
+            name: {...this.initialValue},
+            email: {...this.initialValue},
+            bio: {...this.initialValue},
+            sex: {...this.initialValue},
+            agree: {...this.initialCheckboxValue}
+        });
     }
 
     handleOnSubmit = (e) => {
@@ -28,10 +42,23 @@ class Form extends Component {
         const value = e.target.value;
         const fieldState = this.state[fieldName];
         fieldState.value = value;
-        console.log(fieldState)
         this.setState({
             [fieldName]: fieldState
         });
+    }
+
+    handleCheckboxOnChange = (e) => {
+        const fieldName = e.target.name;
+        const isChecked = e.target.checked;
+        const fieldState = this.state[fieldName];
+        fieldState.isChecked = isChecked;
+        this.setState({
+            [fieldName]: fieldState
+        });
+    }
+
+    handleOnClick = () => {
+        this.resetForm();
     }
 
     render() {
@@ -72,7 +99,8 @@ class Form extends Component {
                         id="female"
                         label="Kobieta"
                         onChange={this.handleOnChange}
-                        value={this.state.sex.value}
+                        value="Kobieta"
+                        selected={this.state.sex.value}
                     />
 
                     <Radio
@@ -80,7 +108,8 @@ class Form extends Component {
                         id="male"
                         label="Mężczyzna"
                         onChange={this.handleOnChange}
-                        value={this.state.sex.value}
+                        value="Mężczyzna"
+                        selected={this.state.sex.value}
                     />
                 </FormFieldWrapper>
 
@@ -89,17 +118,13 @@ class Form extends Component {
                         name="agree"
                         id="agree"
                         label="Akceptuję regulamin"
-                        onChange={this.handleOnChange}
+                        onChange={this.handleCheckboxOnChange}
                         value={this.state.agree.value}
                     />
                 </FormFieldWrapper>
 
-
-
-
-
                 <div>
-                    <button>
+                    <button onClick={this.handleOnClick}>
                         Wyślij formularz
                     </button>
                 </div>
