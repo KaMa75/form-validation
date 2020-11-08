@@ -4,32 +4,25 @@ import {FormFieldWrapper, Input, CheckBox, Radio, TextArea} from './';
 
 class Form extends Component {
 
-    constructor(props) {
-        super(props);
-        this.initialValue = {
-            value: '',
-            isValid: true
-        };
-        this.initialCheckboxValue = {
-            isChecked: false,
-            isValid: true
-        };
-        this.state = {
-            name: {...this.initialValue},
-            email: {...this.initialValue},
-            bio: {...this.initialValue},
-            sex: {...this.initialValue},
-            agree: {...this.initialCheckboxValue}
-        }
+    state = {
+        name: '',
+        email: '',
+        bio: '',
+        sex: '',
+        agree: false,
+        isValid: true,
+        isSended: false
     }
 
-    resetForm() {
+    setStateAfterSend() {
         this.setState({
-            name: {...this.initialValue},
-            email: {...this.initialValue},
-            bio: {...this.initialValue},
-            sex: {...this.initialValue},
-            agree: {...this.initialCheckboxValue}
+            name: '',
+            email: '',
+            bio: '',
+            sex: '',
+            agree: false,
+            isValid: true,
+            isSended: true
         });
     }
 
@@ -40,67 +33,93 @@ class Form extends Component {
     handleOnChange = (e) => {
         const fieldName = e.target.name;
         const value = e.target.value;
-        const fieldState = this.state[fieldName];
-        fieldState.value = value;
         this.setState({
-            [fieldName]: fieldState
+            [fieldName]: value
         });
     }
 
     handleCheckboxOnChange = (e) => {
         const fieldName = e.target.name;
         const isChecked = e.target.checked;
-        const fieldState = this.state[fieldName];
-        fieldState.isChecked = isChecked;
         this.setState({
-            [fieldName]: fieldState
+            [fieldName]: isChecked
         });
     }
 
     handleOnClick = () => {
-        this.resetForm();
+        const {name, email, bio, sex, agree} = this.state;
+        if(name && email && bio && sex && agree) {
+            this.setStateAfterSend();
+            this.disableThanks();
+        } else {
+            this.setState({
+                isValid: false,
+                isSended: false
+            });
+        }
+    }
+
+    disableThanks() {
+        this.timer = setTimeout(() => {
+            this.setState(
+                {isSended: false}
+            );
+            clearTimeout(this.timer);
+        }, 5000);
     }
 
     render() {
         return (
             <form onSubmit={this.handleOnSubmit}>
-                <FormFieldWrapper>
+                <FormFieldWrapper
+                    hideWarning={this.state.isValid || this.state.name}
+                >
                     <Input
                         name="name"
                         type="text"
                         placeholder="Imię"
                         onChange={this.handleOnChange}
-                        value={this.state.name.value}
+                        value={this.state.name}
+                        isValid={this.state.isValid}
                     />
                 </FormFieldWrapper>
 
-                <FormFieldWrapper>
+                <FormFieldWrapper
+                    hideWarning={this.state.isValid || this.state.email}
+                >
                     <Input
                         name="email"
                         type="email"
                         placeholder="E-mail"
                         onChange={this.handleOnChange}
-                        value={this.state.email.value}
+                        value={this.state.email}
+                        isValid={this.state.isValid}
                     />
                 </FormFieldWrapper>
 
-                <FormFieldWrapper>
+                <FormFieldWrapper
+                    hideWarning={this.state.isValid || this.state.bio}
+                >
                     <TextArea
                         name="bio"
                         placeholder="Bio"
                         onChange={this.handleOnChange}
-                        value={this.state.bio.value}
+                        value={this.state.bio}
+                        isValid={this.state.isValid}
                     />
                 </FormFieldWrapper>
 
-                <FormFieldWrapper className="radio warn-border">
+                <FormFieldWrapper
+                    hideWarning={this.state.isValid || this.state.sex}
+                    className={(this.state.isValid || this.state.sex) ? "radio" : "radio warn-border"}
+                >
                     <Radio
                         name="sex"
                         id="female"
                         label="Kobieta"
                         onChange={this.handleOnChange}
                         value="Kobieta"
-                        selected={this.state.sex.value}
+                        selected={this.state.sex}
                     />
 
                     <Radio
@@ -109,19 +128,24 @@ class Form extends Component {
                         label="Mężczyzna"
                         onChange={this.handleOnChange}
                         value="Mężczyzna"
-                        selected={this.state.sex.value}
+                        selected={this.state.sex}
                     />
                 </FormFieldWrapper>
 
-                <FormFieldWrapper className="checkbox warn-border">
+                <FormFieldWrapper
+                    hideWarning={this.state.isValid || this.state.agree}
+                    className={(this.state.isValid || this.state.agree) ? "checkbox" : "checkbox warn-border"}
+                >
                     <CheckBox
                         name="agree"
                         id="agree"
                         label="Akceptuję regulamin"
                         onChange={this.handleCheckboxOnChange}
-                        value={this.state.agree.value}
+                        value={this.state.agree}
                     />
                 </FormFieldWrapper>
+
+                {this.state.isSended && <h3>Dziękujemy za wysłanie</h3>}
 
                 <div>
                     <button onClick={this.handleOnClick}>

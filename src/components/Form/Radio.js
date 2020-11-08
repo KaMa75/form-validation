@@ -1,9 +1,6 @@
 import React from 'react';
 
 function Radio({name, id, label, onChange, value, selected}) {
-    console.log(selected)
-    console.log(value)
-    console.log(selected === value)
     return (
         <>
             <input

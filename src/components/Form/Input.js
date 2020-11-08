@@ -1,9 +1,9 @@
 import React from 'react';
 
-function Input({name, type, placeholder, onChange, value}) {
+function Input({name, type, placeholder, onChange, value, isValid}) {
     return (
         <input
-            className="warn-border"
+            className={(value || isValid) ? "" : "warn-border"}
             name={name}
             type={type}
             placeholder={placeholder}

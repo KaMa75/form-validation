@@ -1,9 +1,9 @@
 import React from 'react';
 
-function TextArea({name, placeholder, onChange, value}) {
+function TextArea({name, placeholder, onChange, value, isValid}) {
     return (
         <textarea
-            className="warn-border"
+            className={(value || isValid) ? "" : "warn-border"}
             name={name}
             placeholder={placeholder}
             rows="5"

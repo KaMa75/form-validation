@@ -1,6 +1,6 @@
 import React from 'react';
 
-function CheckBox({name, id, onChange}) {
+function CheckBox({name, id, onChange, label, value}) {
     return (
         <>
             <input
@@ -8,8 +8,9 @@ function CheckBox({name, id, onChange}) {
                 id={id}
                 type="checkbox"
                 onChange={onChange}
+                checked={value}
             />
-            <label htmlFor={id}>label</label>
+            <label htmlFor={id}>{label}</label>
         </>
     );
 }

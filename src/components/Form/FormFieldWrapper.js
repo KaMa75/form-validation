@@ -1,14 +1,14 @@
 import React from 'react';
 
-function Input({children, className}) {
+function Input({children, className, hideWarning}) {
     return (
         <>
             <div className={className}>
                 {children}
             </div>
-            <p className="warning">
+            {!hideWarning && (<p className="warning">
                 Pole wymagane
-            </p>
+            </p>)}
         </>
     );
 }
